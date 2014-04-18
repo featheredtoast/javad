@@ -42,6 +42,10 @@ public class JavaD {
 		timer.stop();
 	}
 	
+	public Properties getProperties() {
+		return properties;
+	}
+	
 	private void startJavaD() {
 		ActionListener al = new ActionListener() {
 			
