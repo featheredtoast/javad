@@ -24,6 +24,8 @@ public class JavaD {
 	
 	private Timer timer;
 	
+	private int interval = 60000;
+	
 	public JavaD(String directoryPath) throws IOException {
 		this.directoryPath = directoryPath;
 		properties = new Properties();
@@ -31,8 +33,24 @@ public class JavaD {
 		startJavaD();
 	}
 	
+	public JavaD(String directoryPath, int interval) throws IOException {
+		this.directoryPath = directoryPath;
+		this.interval = interval;
+		properties = new Properties();
+		loadPropertiesInDirectory();
+		startJavaD();
+	}
+	
 	public JavaD(String directoryPath, Properties defaults) throws IOException {
 		this.directoryPath = directoryPath;
+		properties = new Properties(defaults);
+		loadPropertiesInDirectory();
+		startJavaD();
+	}
+	
+	public JavaD(String directoryPath, Properties defaults, int interval) throws IOException {
+		this.directoryPath = directoryPath;
+		this.interval = interval;
 		properties = new Properties(defaults);
 		loadPropertiesInDirectory();
 		startJavaD();
@@ -59,7 +77,7 @@ public class JavaD {
 			}
 		};
 		log.debug("properties javad starting");
-		timer = new Timer(60000, al);
+		timer = new Timer(interval, al);
 		timer.setRepeats(true);
 		timer.start();
 	}
