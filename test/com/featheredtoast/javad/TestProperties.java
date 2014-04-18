@@ -10,7 +10,7 @@ public class TestProperties {
 
 	@Test
 	public void test() throws IOException, InterruptedException {
-		PropertiesDirectoryWatch javad = new PropertiesDirectoryWatch("/home/jwong/test/properties/");
+		JavaD javad = new JavaD("/home/jwong/test/properties/");
 		
 		Thread.sleep(120000);
 		javad.stop();

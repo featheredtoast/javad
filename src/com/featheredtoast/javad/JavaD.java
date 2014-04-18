@@ -11,46 +11,50 @@ import java.util.Properties;
 
 import javax.swing.Timer;
 
-public class PropertiesDirectoryWatch {
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
+public class JavaD {
+
+	private Log log = LogFactory.getLog(this.getClass());
+	
 	private String directoryPath;
 	
 	private Properties properties;
 	
 	private Timer timer;
 	
-	public PropertiesDirectoryWatch(String directoryPath) throws IOException {
+	public JavaD(String directoryPath) throws IOException {
 		this.directoryPath = directoryPath;
 		properties = new Properties();
 		loadPropertiesInDirectory();
-		startPropertiesDirectoryWatch();
+		startJavaD();
 	}
 	
-	public PropertiesDirectoryWatch(String directoryPath, Properties defaults) throws IOException {
+	public JavaD(String directoryPath, Properties defaults) throws IOException {
 		this.directoryPath = directoryPath;
 		properties = new Properties(defaults);
 		loadPropertiesInDirectory();
-		startPropertiesDirectoryWatch();
+		startJavaD();
 	}
 	
 	public synchronized void stop() {
 		timer.stop();
 	}
 	
-	private void startPropertiesDirectoryWatch() {
+	private void startJavaD() {
 		ActionListener al = new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					System.out.println("loading files...");
 					loadPropertiesInDirectory();
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					log.warn("error loading properties", e1);
 				}
 			}
 		};
+		log.debug("properties javad starting");
 		timer = new Timer(60000, al);
 		timer.setRepeats(true);
 		timer.start();
@@ -73,7 +77,7 @@ public class PropertiesDirectoryWatch {
 	}
 	
 	private void loadProperteisInFile(File propertyFile) throws IOException {
-		System.out.println("loading file: " + propertyFile.getName());
+		log.debug("loading properties: " + propertyFile.getName());
 		InputStream is = new FileInputStream(propertyFile);
 		properties.load(is);
 		is.close();
