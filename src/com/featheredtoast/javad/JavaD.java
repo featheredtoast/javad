@@ -30,7 +30,6 @@ public class JavaD {
 		this.directoryPath = directoryPath;
 		properties = new Properties();
 		loadPropertiesInDirectory();
-		startJavaD();
 	}
 	
 	public JavaD(String directoryPath, int interval) throws IOException {
@@ -38,14 +37,12 @@ public class JavaD {
 		this.interval = interval;
 		properties = new Properties();
 		loadPropertiesInDirectory();
-		startJavaD();
 	}
 	
 	public JavaD(String directoryPath, Properties defaults) throws IOException {
 		this.directoryPath = directoryPath;
 		properties = new Properties(defaults);
 		loadPropertiesInDirectory();
-		startJavaD();
 	}
 	
 	public JavaD(String directoryPath, Properties defaults, int interval) throws IOException {
@@ -53,6 +50,9 @@ public class JavaD {
 		this.interval = interval;
 		properties = new Properties(defaults);
 		loadPropertiesInDirectory();
+	}
+	
+	public synchronized void start() {
 		startJavaD();
 	}
 	
