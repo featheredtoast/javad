@@ -47,9 +47,10 @@ public class TestJavaD {
 		javad.stop();
 	}
 	
-	@Test
+	@Test(timeout = 20000)
 	public void test() throws IOException, InterruptedException {
 		javad = new JavaD("./");
+		javad.start();
 		assertTrue(javad.getProperties().containsKey("key"));
 		assertEquals("value",javad.getProperties().get("key"));
 	}
@@ -57,6 +58,7 @@ public class TestJavaD {
 	@Test(timeout = 20000)
 	public void testLoadDifferentFile() throws IOException, InterruptedException {
 		javad = new JavaD("./", 50);
+		javad.start();
 		assertTrue(javad.getProperties().containsKey("key"));
 		file = new File(filePath);
 		
