@@ -46,6 +46,6 @@
         </junit>
     </target>
 	<target name="jar" depends="build,test">
-		<jar destfile="javad.jar" basedir="."/>
+		<jar destfile="javad.jar" basedir="bin"/>
 	</target>
 </project>
