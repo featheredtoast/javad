@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.util.Properties;
 
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Logger;
@@ -73,6 +74,15 @@ public class TestJavaD {
 		}
 		assertTrue(javad.getProperties().containsKey("key"));
 		assertEquals("value2",javad.getProperties().get("key"));
+	}
+	
+	@Test(timeout = 20000)
+	public void testLoadDefaults() throws IOException, InterruptedException {
+		Properties properties = new Properties();
+		properties.put("key", "valuenottheactualone");
+		javad = new JavaD("./", properties, 50);
+		javad.start();
+		assertTrue(javad.getProperties().containsKey("key"));
 	}
 
 }
