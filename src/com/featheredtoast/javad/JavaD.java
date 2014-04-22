@@ -57,7 +57,9 @@ public class JavaD {
 	}
 	
 	public synchronized void stop() {
-		timer.stop();
+		if(timer != null) {
+			timer.stop();
+		}
 	}
 	
 	public Properties getProperties() {

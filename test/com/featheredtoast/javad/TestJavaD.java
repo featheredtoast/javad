@@ -84,5 +84,11 @@ public class TestJavaD {
 		javad.start();
 		assertTrue(javad.getProperties().containsKey("key"));
 	}
+	
+	@Test(timeout = 20000)
+	public void testStopWithoutStart() throws IOException {
+		javad = new JavaD("./", 50);
+		javad.stop();
+	}
 
 }

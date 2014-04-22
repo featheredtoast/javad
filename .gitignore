@@ -4,3 +4,4 @@ build
 .project
 junit
 javad.jar
+/bin
