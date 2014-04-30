@@ -5,6 +5,7 @@
     <property name="debuglevel" value="source,lines,vars"/>
     <property name="target" value="1.6"/>
     <property name="source" value="1.6"/>
+    <property name="java6.boot.classpath" value="${env.JAVA6_BOOTCLASSES}" />
     <path id="javad.classpath">
         <pathelement location="bin"/>
         <pathelement location="lib/junit-4.10.jar"/>
@@ -31,7 +32,7 @@
     <target depends="build-project" name="build"/>
     <target depends="init" name="build-project">
         <echo message="${ant.project.name}: ${ant.file}"/>
-        <javac debug="true" debuglevel="${debuglevel}" destdir="bin" includeantruntime="false" source="${source}" target="${target}">
+        <javac debug="true" debuglevel="${debuglevel}" destdir="bin" includeantruntime="false" source="${source}" target="${target}" bootclasspath="${java6.boot.classpath}">
             <src path="src"/>
             <src path="test"/>
             <classpath refid="javad.classpath"/>
