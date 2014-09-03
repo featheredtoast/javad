@@ -66,6 +66,10 @@ public class JavaD {
 		return properties;
 	}
 	
+	public void resetProperties(Properties properties) {
+		properties = new Properties(properties);
+	}
+	
 	private void startJavaD() {
 		ActionListener al = new ActionListener() {
 			
