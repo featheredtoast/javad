@@ -67,7 +67,7 @@ public class JavaD {
 	}
 	
 	public void resetProperties(Properties properties) {
-		properties = new Properties(properties);
+		this.properties = new Properties(properties);
 	}
 	
 	private void startJavaD() {
