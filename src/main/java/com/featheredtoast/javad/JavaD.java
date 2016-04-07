@@ -1,4 +1,4 @@
-gpackage com.featheredtoast.javad;
+package com.featheredtoast.javad;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,7 +8,6 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
-import java.util.Map;
 import java.util.Properties;
 
 import javax.swing.Timer;
