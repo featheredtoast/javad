@@ -96,14 +96,17 @@ public class TestJavaD {
     }
 
     @Test(timeout = 20000)
-    public void testLoadEnvironment() throws IOException {
+    public void testLoadEnvironment() throws IOException, InterruptedException {
     	String envVar = "JAVAD_TEST";
-        Runtime.getRuntime().exec("sh define " + envVar
-                                  + "test1=test1"
-                                  + "test2=test2"
-                                  + "endef");
+    	String envProperties = "test1=test1\n"
+            + "test2=test2\"";
+    	System.setProperty(envVar, envProperties);
         javad = new JavaD("./", 50);
-        javad.loadFromVar(envVar);
+        javad.addLoadFromSystemProperty(envVar);
+        javad.start();
+        while(!"test1".equals(javad.getProperties().get("test1"))) {
+            Thread.sleep(100);
+        }
         assertEquals("test1",javad.getProperties().get("test1"));
     }
 

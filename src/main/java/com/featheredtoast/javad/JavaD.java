@@ -1,4 +1,4 @@
-package com.featheredtoast.javad;
+gpackage com.featheredtoast.javad;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -28,7 +28,7 @@ public class JavaD {
 	
     private int interval = 60000;
 
-    private String envVar = null;
+    private String systemVar = null;
 	
     public JavaD(String directoryPath) throws IOException {
         this.directoryPath = directoryPath;
@@ -56,8 +56,8 @@ public class JavaD {
         loadPropertiesInDirectory();
     }
 
-    public void loadFromVar(String envVar) {
-        this.envVar = envVar;
+    public void addLoadFromSystemProperty(String envVar) {
+        this.systemVar = envVar;
     }
 	
     public synchronized void start() {
@@ -117,13 +117,14 @@ public class JavaD {
         InputStream is = new FileInputStream(propertyFile);
         Properties newProperties = new Properties();
         newProperties.load(is);
-        if(envVar != null) {
-        	log.debug(envVar);
-	        String environmentPropertyString = System.getenv(envVar);
-	        log.debug(environmentPropertyString);
-	        if(environmentPropertyString != null) {
-	            newProperties.load(new StringReader(environmentPropertyString));
-	        }
+        if(systemVar != null) {
+            log.debug(systemVar);
+            String environmentPropertyString = System.getProperty(systemVar);
+            log.debug(environmentPropertyString);
+            log.debug(environmentPropertyString);
+            if(environmentPropertyString != null) {
+                newProperties.load(new StringReader(environmentPropertyString));
+            }
         }
         properties = newProperties;
         is.close();
