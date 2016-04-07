@@ -16,99 +16,117 @@ import org.apache.commons.logging.LogFactory;
 
 public class JavaD {
 
-	private Log log = LogFactory.getLog(this.getClass());
+    private Log log = LogFactory.getLog(this.getClass());
 	
-	private String directoryPath;
+    private String directoryPath;
 	
-	private Properties properties;
+    private Properties properties;
 	
-	private Timer timer;
+    private Timer timer;
 	
-	private int interval = 60000;
+    private int interval = 60000;
+
+    private String envVar = null;
 	
-	public JavaD(String directoryPath) throws IOException {
-		this.directoryPath = directoryPath;
-		properties = new Properties();
-		loadPropertiesInDirectory();
-	}
+    public JavaD(String directoryPath) throws IOException {
+        this.directoryPath = directoryPath;
+        properties = new Properties();
+        loadPropertiesInDirectory();
+    }
 	
-	public JavaD(String directoryPath, int interval) throws IOException {
-		this.directoryPath = directoryPath;
-		this.interval = interval;
-		properties = new Properties();
-		loadPropertiesInDirectory();
-	}
+    public JavaD(String directoryPath, int interval) throws IOException {
+        this.directoryPath = directoryPath;
+        this.interval = interval;
+        properties = new Properties();
+        loadPropertiesInDirectory();
+    }
 	
-	public JavaD(String directoryPath, Properties defaults) throws IOException {
-		this.directoryPath = directoryPath;
-		properties = new Properties(defaults);
-		loadPropertiesInDirectory();
-	}
+    public JavaD(String directoryPath, Properties defaults) throws IOException {
+        this.directoryPath = directoryPath;
+        properties = new Properties(defaults);
+        loadPropertiesInDirectory();
+    }
 	
-	public JavaD(String directoryPath, Properties defaults, int interval) throws IOException {
-		this.directoryPath = directoryPath;
-		this.interval = interval;
-		properties = new Properties(defaults);
-		loadPropertiesInDirectory();
-	}
+    public JavaD(String directoryPath, Properties defaults, int interval) throws IOException {
+        this.directoryPath = directoryPath;
+        this.interval = interval;
+        properties = new Properties(defaults);
+        loadPropertiesInDirectory();
+    }
+
+    public void loadFromVar(String envVar) {
+        this.envVar = envVar;
+    }
 	
-	public synchronized void start() {
-		startJavaD();
-	}
+    public synchronized void start() {
+        startJavaD();
+    }
 	
-	public synchronized void stop() {
-		if(timer != null) {
-			timer.stop();
-		}
-	}
+    public synchronized void stop() {
+        if(timer != null) {
+            timer.stop();
+        }
+    }
 	
-	public Properties getProperties() {
-		return properties;
-	}
+    public Properties getProperties() {
+        return properties;
+    }
 	
-	public void resetProperties(Properties properties) {
-		this.properties = new Properties(properties);
-	}
+    public void resetProperties(Properties properties) {
+        this.properties = new Properties(properties);
+    }
 	
-	private void startJavaD() {
-		ActionListener al = new ActionListener() {
+    private void startJavaD() {
+        ActionListener al = new ActionListener() {
 			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				try {
-					loadPropertiesInDirectory();
-				} catch (IOException e1) {
-					log.warn("error loading properties", e1);
-				}
-			}
-		};
-		log.debug("properties javad starting");
-		timer = new Timer(interval, al);
-		timer.setRepeats(true);
-		timer.start();
-	}
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    try {
+                        loadPropertiesInDirectory();
+                    } catch (IOException e1) {
+                        log.warn("error loading properties", e1);
+                    }
+                }
+            };
+        log.debug("properties javad starting");
+        timer = new Timer(interval, al);
+        timer.setRepeats(true);
+        timer.start();
+    }
 	
-	private synchronized void loadPropertiesInDirectory() throws IOException {
-		File dir = new File(directoryPath);
+    private synchronized void loadPropertiesInDirectory() throws IOException {
+        File dir = new File(directoryPath);
 		
-		if(dir.isDirectory()) {
-			File[] propertyFiles = dir.listFiles(new FilenameFilter() {
-				@Override
-				public boolean accept(File arg0, String arg1) {
-					return arg1.endsWith(".properties");
-				}
-			});
-			for(File file : propertyFiles) {
-				loadProperteisInFile(file);
-			}
-		}
-	}
+        if(dir.isDirectory()) {
+            File[] propertyFiles = dir.listFiles(new FilenameFilter() {
+                    @Override
+                    public boolean accept(File arg0, String arg1) {
+                        return arg1.endsWith(".properties");
+                    }
+                });
+            for(File file : propertyFiles) {
+                loadProperteisInFile(file);
+            }
+        }
+    }
 	
-	private void loadProperteisInFile(File propertyFile) throws IOException {
-		log.debug("loading properties: " + propertyFile.getName());
-		InputStream is = new FileInputStream(propertyFile);
-		properties.load(is);
-		is.close();
-	}
-	
+    private void loadProperteisInFile(File propertyFile) throws IOException {
+        log.debug("loading properties: " + propertyFile.getName());
+        InputStream is = new FileInputStream(propertyFile);
+        Properties newProperties = new Properties();
+        newProperties.load(is);
+        String environmentPropertyString = loadEnvironmentConfig(this.envVar);
+        if(environmentPropertiesString != null) {
+            newProperties.load(new StringReader(environmentPropertyString));
+        }
+        properties = newProperties;
+        is.close();
+    }
+
+    private String loadEnvironmentConfig(String envVar) {
+        Map<String, String> env = System.getenv();
+        if(env.contains(envVar)) {
+            return env.get(envVar);
+        }
+    }
 }
