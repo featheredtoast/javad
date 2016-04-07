@@ -7,6 +7,8 @@ import java.io.FileInputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.swing.Timer;
@@ -115,18 +117,15 @@ public class JavaD {
         InputStream is = new FileInputStream(propertyFile);
         Properties newProperties = new Properties();
         newProperties.load(is);
-        String environmentPropertyString = loadEnvironmentConfig(this.envVar);
-        if(environmentPropertiesString != null) {
-            newProperties.load(new StringReader(environmentPropertyString));
+        if(envVar != null) {
+        	log.debug(envVar);
+	        String environmentPropertyString = System.getenv(envVar);
+	        log.debug(environmentPropertyString);
+	        if(environmentPropertyString != null) {
+	            newProperties.load(new StringReader(environmentPropertyString));
+	        }
         }
         properties = newProperties;
         is.close();
-    }
-
-    private String loadEnvironmentConfig(String envVar) {
-        Map<String, String> env = System.getenv();
-        if(env.contains(envVar)) {
-            return env.get(envVar);
-        }
     }
 }

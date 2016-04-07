@@ -1,4 +1,4 @@
-package com.featheredtoast.javad;
+package test.com.featheredtoast.javad;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -15,6 +15,8 @@ import org.apache.log4j.PatternLayout;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import com.featheredtoast.javad.JavaD;
 
 public class TestJavaD {
 
@@ -45,7 +47,9 @@ public class TestJavaD {
     @After
     public void cleanup() {
         file.delete();
-        javad.stop();
+        if(javad != null) {
+            javad.stop();
+        }
     }
 	
     @Test(timeout = 20000)
@@ -93,10 +97,13 @@ public class TestJavaD {
 
     @Test(timeout = 20000)
     public void testLoadEnvironment() throws IOException {
-        Runtime.getRuntime().exec("define JAVAD_TEST
-test1=test1
-test2=test2");
+    	String envVar = "JAVAD_TEST";
+        Runtime.getRuntime().exec("sh define " + envVar
+                                  + "test1=test1"
+                                  + "test2=test2"
+                                  + "endef");
         javad = new JavaD("./", 50);
+        javad.loadFromVar(envVar);
         assertEquals("test1",javad.getProperties().get("test1"));
     }
 
