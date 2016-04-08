@@ -116,6 +116,7 @@ public class JavaD {
         InputStream is = new FileInputStream(propertyFile);
         Properties newFileProperties = new Properties();
         newFileProperties.load(is);
+        is.close();
         Properties newEnvironmentProperties = new Properties();
         if(systemVar != null) {
             log.debug(systemVar);
@@ -131,7 +132,6 @@ public class JavaD {
         }
         properties.putAll(newFileProperties);
         properties.putAll(newEnvironmentProperties);
-        is.close();
     }
 
     private Properties parseEnvironmentProperty(String propertyString) {
@@ -142,6 +142,7 @@ public class JavaD {
             if(keyValueArray.length >= 2) {
                 String key = keyValueArray[0].trim();
                 String value = keyValueArray[1].trim();
+                log.debug("setting system property " + key + " " + value);
                 newEnvironmentProperties.setProperty(key, value);
             }
         }

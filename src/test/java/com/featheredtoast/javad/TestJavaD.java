@@ -104,4 +104,15 @@ public class TestJavaD {
         assertEquals("test2",javad.getProperties().get("test2"));
     }
 
+    @Test(timeout = 20000)
+    public void testLoadOverridingEnvironment() throws IOException, InterruptedException {
+    	String envVar = "JAVAD_TEST";
+    	String envProperties = " key env1; key2 env2;";
+    	System.setProperty(envVar, envProperties);
+        javad = new JavaD("./", 50);
+        javad.addLoadFromSystemProperty(envVar);
+        assertEquals("env1",javad.getProperties().get("key"));
+        assertEquals("env2",javad.getProperties().get("key2"));
+    }
+    
 }
