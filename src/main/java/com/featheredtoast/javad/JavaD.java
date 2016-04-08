@@ -31,32 +31,33 @@ public class JavaD {
     public JavaD(String directoryPath) throws IOException {
         this.directoryPath = directoryPath;
         properties = new Properties();
-        loadPropertiesInDirectory();
+        loadExternalProperties();
     }
 	
     public JavaD(String directoryPath, int interval) throws IOException {
         this.directoryPath = directoryPath;
         this.interval = interval;
         properties = new Properties();
-        loadPropertiesInDirectory();
+        loadExternalProperties();
     }
 	
     public JavaD(String directoryPath, Properties defaults) throws IOException {
         this.directoryPath = directoryPath;
         properties = new Properties(defaults);
-        loadPropertiesInDirectory();
+        loadExternalProperties();
     }
 	
     public JavaD(String directoryPath, Properties defaults, int interval) throws IOException {
         this.directoryPath = directoryPath;
         this.interval = interval;
         properties = new Properties(defaults);
-        loadPropertiesInDirectory();
+        loadExternalProperties();
     }
 
     public void addLoadFromSystemProperty(String envVar) throws IOException {
+        log.debug("adding envvar: " + envVar);
         this.systemVar = envVar;
-        loadPropertiesInDirectory();
+        loadExternalProperties();
     }
 	
     public synchronized void start() {
@@ -83,7 +84,7 @@ public class JavaD {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     try {
-                        loadPropertiesInDirectory();
+                        loadExternalProperties();
                     } catch (IOException e1) {
                         log.warn("error loading properties", e1);
                     }
@@ -95,9 +96,8 @@ public class JavaD {
         timer.start();
     }
 	
-    private synchronized void loadPropertiesInDirectory() throws IOException {
+    private synchronized void loadExternalProperties() throws IOException {
         File dir = new File(directoryPath);
-		
         if(dir.isDirectory()) {
             File[] propertyFiles = dir.listFiles(new FilenameFilter() {
                     @Override
@@ -109,6 +109,7 @@ public class JavaD {
                 loadProperteisInFile(file);
             }
         }
+        loadEnvironmentProperty();
     }
 	
     private void loadProperteisInFile(File propertyFile) throws IOException {
@@ -117,6 +118,10 @@ public class JavaD {
         Properties newFileProperties = new Properties();
         newFileProperties.load(is);
         is.close();
+        properties.putAll(newFileProperties);
+    }
+
+    private void loadEnvironmentProperty() {
         Properties newEnvironmentProperties = new Properties();
         if(systemVar != null) {
             log.debug(systemVar);
@@ -130,7 +135,6 @@ public class JavaD {
                 newEnvironmentProperties = parseEnvironmentProperty(environmentPropertyString);
             }
         }
-        properties.putAll(newFileProperties);
         properties.putAll(newEnvironmentProperties);
     }
 
