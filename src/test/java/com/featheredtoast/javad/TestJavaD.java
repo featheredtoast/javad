@@ -55,7 +55,7 @@ public class TestJavaD {
         javad = new JavaD("./");
         javad.start();
         assertTrue(javad.getProperties().containsKey("key"));
-        assertEquals("value",javad.getProperties().get("key"));
+        assertEquals("value",javad.getProperties().getProperty("key"));
     }
 	
     @Test(timeout = 20000)
@@ -71,11 +71,11 @@ public class TestJavaD {
         FileOutputStream os = new FileOutputStream(file);
         os.write(input.getBytes());
         os.close();
-        while(!"value2".equals(javad.getProperties().get("key"))) {
+        while(!"value2".equals(javad.getProperties().getProperty("key"))) {
             Thread.sleep(100);
         }
         assertTrue(javad.getProperties().containsKey("key"));
-        assertEquals("value2",javad.getProperties().get("key"));
+        assertEquals("value2",javad.getProperties().getProperty("key"));
     }
 	
     @Test(timeout = 20000)
@@ -100,8 +100,8 @@ public class TestJavaD {
     	System.setProperty(envVar, envProperties);
         javad = new JavaD("./", 50);
         javad.addLoadFromSystemProperty(envVar);
-        assertEquals("test1",javad.getProperties().get("test1"));
-        assertEquals("test2",javad.getProperties().get("test2"));
+        assertEquals("test1",javad.getProperties().getProperty("test1"));
+        assertEquals("test2",javad.getProperties().getProperty("test2"));
     }
 
     @Test(timeout = 20000)
@@ -111,8 +111,17 @@ public class TestJavaD {
     	System.setProperty(envVar, envProperties);
         javad = new JavaD("./", 50);
         javad.addLoadFromSystemProperty(envVar);
-        assertEquals("env1",javad.getProperties().get("key"));
-        assertEquals("env2",javad.getProperties().get("key2"));
+        assertEquals("env1",javad.getProperties().getProperty("key"));
+        assertEquals("env2",javad.getProperties().getProperty("key2"));
     }
     
+    @Test(timeout = 20000)
+    public void testInterestingStrings() throws IOException, InterruptedException {
+    	String envVar = "JAVAD_TEST";
+    	String envProperties = "redisAddress redis; dbUrl jdbc:mysql://mysql:3306/TMS?characterEncoding=UTF-8;";
+    	System.setProperty(envVar, envProperties);
+        javad = new JavaD("./", 50);
+        javad.addLoadFromSystemProperty(envVar);
+        assertEquals("jdbc:mysql://mysql:3306/TMS?characterEncoding=UTF-8",javad.getProperties().getProperty("dbUrl"));
+    }    
 }
