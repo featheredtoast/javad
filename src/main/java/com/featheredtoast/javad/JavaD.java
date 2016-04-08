@@ -138,7 +138,7 @@ public class JavaD {
         Properties newEnvironmentProperties = new Properties();
         String[] propertyKeyValues = propertyString.split(";");
         for(String keyValue : propertyKeyValues) {
-            String[] keyValueArray = keyValue.split(" ");
+            String[] keyValueArray = keyValue.trim().split(" ");
             if(keyValueArray.length >= 2) {
                 String key = keyValueArray[0].trim();
                 String value = keyValueArray[1].trim();
