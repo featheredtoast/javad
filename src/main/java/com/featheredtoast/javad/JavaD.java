@@ -115,8 +115,9 @@ public class JavaD {
     private void loadProperteisInFile(File propertyFile) throws IOException {
         log.debug("loading properties: " + propertyFile.getName());
         InputStream is = new FileInputStream(propertyFile);
-        Properties newProperties = new Properties();
-        newProperties.load(is);
+        Properties newFileProperties = new Properties();
+        newFileProperties.load(is);
+        Properties newEnvironmentProperties = new Properties();
         if(systemVar != null) {
             log.debug(systemVar);
             String environmentPropertyString = System.getenv(systemVar);
@@ -126,10 +127,11 @@ public class JavaD {
             }
             log.debug(environmentPropertyString);
             if(environmentPropertyString != null) {
-                newProperties.load(new StringReader(environmentPropertyString));
+                newEnvironmentProperties.load(new StringReader(environmentPropertyString));
             }
         }
-        properties = newProperties;
+        properties.putAll(newFileProperties);
+        properties.putAll(newEnvironmentProperties);
         is.close();
     }
 }
