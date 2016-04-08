@@ -1,4 +1,4 @@
-package test.com.featheredtoast.javad;
+package com.featheredtoast.javad;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -15,8 +15,6 @@ import org.apache.log4j.PatternLayout;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import com.featheredtoast.javad.JavaD;
 
 public class TestJavaD {
 
