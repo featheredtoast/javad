@@ -118,8 +118,11 @@ public class JavaD {
         newProperties.load(is);
         if(systemVar != null) {
             log.debug(systemVar);
-            String environmentPropertyString = System.getProperty(systemVar);
-            log.debug(environmentPropertyString);
+            String environmentPropertyString = System.getenv(systemVar);
+            if(environmentPropertyString == null ||
+            		"".equals(environmentPropertyString)) {
+            	environmentPropertyString = System.getProperty(systemVar);
+            }
             log.debug(environmentPropertyString);
             if(environmentPropertyString != null) {
                 newProperties.load(new StringReader(environmentPropertyString));
