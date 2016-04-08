@@ -96,8 +96,7 @@ public class TestJavaD {
     @Test(timeout = 20000)
     public void testLoadEnvironment() throws IOException, InterruptedException {
     	String envVar = "JAVAD_TEST";
-    	String envProperties = "test1=test1\n"
-            + "test2=test2\"";
+    	String envProperties = "test1 test1; test2 test2";
     	System.setProperty(envVar, envProperties);
         javad = new JavaD("./", 50);
         javad.addLoadFromSystemProperty(envVar);

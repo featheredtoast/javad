@@ -7,7 +7,6 @@ import java.io.FileInputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringReader;
 import java.util.Properties;
 
 import javax.swing.Timer;
@@ -122,16 +121,30 @@ public class JavaD {
             log.debug(systemVar);
             String environmentPropertyString = System.getenv(systemVar);
             if(environmentPropertyString == null ||
-            		"".equals(environmentPropertyString)) {
+               "".equals(environmentPropertyString)) {
             	environmentPropertyString = System.getProperty(systemVar);
             }
             log.debug(environmentPropertyString);
             if(environmentPropertyString != null) {
-                newEnvironmentProperties.load(new StringReader(environmentPropertyString));
+                newEnvironmentProperties = parseEnvironmentProperty(environmentPropertyString);
             }
         }
         properties.putAll(newFileProperties);
         properties.putAll(newEnvironmentProperties);
         is.close();
+    }
+
+    private Properties parseEnvironmentProperty(String propertyString) {
+        Properties newEnvironmentProperties = new Properties();
+        String[] propertyKeyValues = propertyString.split(";");
+        for(String keyValue : propertyKeyValues) {
+            String[] keyValueArray = keyValue.split(" ");
+            if(keyValueArray.length >= 2) {
+                String key = keyValueArray[0].trim();
+                String value = keyValueArray[1].trim();
+                newEnvironmentProperties.setProperty(key, value);
+            }
+        }
+        return newEnvironmentProperties;
     }
 }
