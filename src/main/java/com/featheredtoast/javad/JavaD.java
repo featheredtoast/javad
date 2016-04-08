@@ -55,8 +55,9 @@ public class JavaD {
         loadPropertiesInDirectory();
     }
 
-    public void addLoadFromSystemProperty(String envVar) {
+    public void addLoadFromSystemProperty(String envVar) throws IOException {
         this.systemVar = envVar;
+        loadPropertiesInDirectory();
     }
 	
     public synchronized void start() {
