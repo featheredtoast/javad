@@ -103,10 +103,6 @@ public class TestJavaD {
     	System.setProperty(envVar, envProperties);
         javad = new JavaD("./", 50);
         javad.addLoadFromSystemProperty(envVar);
-        javad.start();
-        while(!"test1".equals(javad.getProperties().get("test1"))) {
-            Thread.sleep(100);
-        }
         assertEquals("test1",javad.getProperties().get("test1"));
     }
 
